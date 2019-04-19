@@ -1,3 +1,13 @@
+#include "network.h"
+#include "region_layer.h"
+#include "cost_layer.h"
+#include "utils.h"
+#include "parser.h"
+#include "box.h"
+#include "demo.h"
+#include "option_list.h"
+#include "blas.h"
+#include "communication.h"
 #include "darknet.h"
 
 static int coco_ids[] = {1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24,25,27,28,31,32,33,34,35,36,37,38,39,40,41,42,43,44,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,67,70,72,73,74,75,76,77,78,79,80,81,82,84,85,86,87,88,89,90};
@@ -800,6 +810,16 @@ void run_detector(int argc, char **argv)
     }
     char *gpu_list = find_char_arg(argc, argv, "-gpus", 0);
     char *outfile = find_char_arg(argc, argv, "-out", 0);
+		char *net_ip = find_char_arg(argc, argv, "-address", "127.0.0.1");
+		char *net_port = find_char_arg(argc, argv, "-port", "");
+		char *net_protocol = find_char_arg(argc, argv, "-protocol", "ws");
+		coordFormat = find_char_arg(argc, argv, "-coord", "xywh");
+		writeVideo = find_int_arg(argc, argv, "-videoOut", 0);
+		createNamedPipe = find_int_arg(argc, argv, "-pipe", 0);
+		videoPath = find_char_arg(argc, argv, "-videoOutPath", "./output.avi");
+		showWindow = find_int_arg(argc, argv, "-showWindow", 0);
+		printf("videoPath:%s, namedPipe:%i, writeVideo:%i, showWindow:%i\n", videoPath,createNamedPipe,writeVideo,showWindow);
+		comm_setup(net_ip, net_port, net_protocol);
     int *gpus = 0;
     int gpu = 0;
     int ngpus = 0;
