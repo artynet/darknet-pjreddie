@@ -19,6 +19,7 @@ static image **demo_alphabet;
 static int demo_classes;
 
 static float **probs;
+static box *boxes;
 static network *net;
 static image buff [3];
 static image buff_letter[3];
@@ -31,6 +32,7 @@ static int running = 0;
 
 static int demo_frame = 3;
 static int demo_index = 0;
+static int demo_detections = 0;
 static float **predictions;
 static float *avg;
 static int demo_done = 0;
@@ -90,6 +92,7 @@ void *detect_in_thread(void *ptr)
     float nms = .4;
 
     layer l = net->layers[net->n-1];
+    demo_detections = l.n*l.w*l.h;
     float *X = buff_letter[(buff_index+2)%3].data;
     network_predict(net, X);
 
@@ -127,6 +130,7 @@ void *detect_in_thread(void *ptr)
     if (nms > 0) do_nms_obj(dets, nboxes, l.classes, nms);
 
     int j;
+    boxes = (box *)calloc(l.w*l.h*l.n, sizeof(box));
     probs = (float **)calloc(l.w*l.h*l.n, sizeof(float *));
     for(j = 0; j < l.w*l.h*l.n; ++j) probs[j] = (float *)calloc(l.classes+1, sizeof(float));
 
@@ -138,7 +142,7 @@ void *detect_in_thread(void *ptr)
     if(showWindow){
         draw_detections(display, dets, nboxes, demo_thresh, demo_names, demo_alphabet, demo_classes);
     }
-    ws_send_detections(display, dets, nboxes, demo_thresh, probs, demo_names, demo_alphabet, demo_classes);
+    ws_send_detections(display, demo_detections, boxes, demo_thresh, probs, demo_names, demo_alphabet, demo_classes);
     free_detections(dets, nboxes);
 
     demo_index = (demo_index + 1)%demo_frame;
