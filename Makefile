@@ -9,12 +9,19 @@ ARCH= -arch=sm_50 \
     -gencode=arch=compute_50,code=sm_50 \
     -gencode=arch=compute_52,code=sm_52 \
     -gencode=arch=compute_60,code=sm_60 \
-    -gencode=arch=compute_61,code=sm_61 \
+    -gencode=arch=compute_62,code=sm_62 \
     -gencode=arch=compute_70,code=sm_70 \
     -gencode=arch=compute_75,code=sm_75 \
-    -gencode=arch=compute_75,code=compute_75 
+    -gencode=arch=compute_61,code=sm_61 \
+    -gencode=arch=compute_61,code=compute_61
 
 #   -gencode arch=compute_20,code=[sm_20,sm_21] \ This one is deprecated?
+
+# optimization for NVidia GeForce GTX 1050 Ti
+# -gencode arch=compute_61,code=[sm_61,compute_61]
+
+# optimization for NVidia Jetson TX2
+# -gencode arch=compute_62,code=[sm_62,compute_62]
 
 # This is what I use, uncomment if you know your arch and want to specify
 # ARCH= -gencode arch=compute_52,code=compute_52
