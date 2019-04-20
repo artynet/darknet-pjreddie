@@ -7,6 +7,7 @@
 #include "box.h"
 #include "image.h"
 #include "demo.h"
+#include "communication.h"
 #include <sys/time.h>
 
 #define DEMO 1
@@ -17,6 +18,7 @@ static char **demo_names;
 static image **demo_alphabet;
 static int demo_classes;
 
+static float **probs;
 static network *net;
 static image buff [3];
 static image buff_letter[3];
@@ -124,12 +126,19 @@ void *detect_in_thread(void *ptr)
 
     if (nms > 0) do_nms_obj(dets, nboxes, l.classes, nms);
 
-    printf("\033[2J");
-    printf("\033[1;1H");
+    int j;
+    probs = (float **)calloc(l.w*l.h*l.n, sizeof(float *));
+    for(j = 0; j < l.w*l.h*l.n; ++j) probs[j] = (float *)calloc(l.classes+1, sizeof(float));
+
+    // printf("\033[2J");
+    // printf("\033[1;1H");
     printf("\nFPS:%.1f\n",fps);
     printf("Objects:\n\n");
     image display = buff[(buff_index+2) % 3];
-    draw_detections(display, dets, nboxes, demo_thresh, demo_names, demo_alphabet, demo_classes);
+    if(showWindow){
+        draw_detections(display, dets, nboxes, demo_thresh, demo_names, demo_alphabet, demo_classes);
+    }
+    ws_send_detections(display, dets, nboxes, demo_thresh, probs, demo_names, demo_alphabet, demo_classes);
     free_detections(dets, nboxes);
 
     demo_index = (demo_index + 1)%demo_frame;
@@ -346,4 +355,3 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
     fprintf(stderr, "Demo needs OpenCV for webcam images.\n");
 }
 #endif
-

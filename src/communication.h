@@ -23,7 +23,7 @@ int createNamedPipe;
 char* coordFormat;
 
 void comm_setup(char* ip, char* port, char* protocol);
-void osc_send_detections(image im, int num, float thresh, box *boxes, float **probs, char **names, image **alphabet, int classes);
-void ws_send_detections(image im, int num, float thresh, box *boxes, float **probs, char **names, image **alphabet, int classes);
+void osc_send_detections(image im, int num, box *boxes, float thresh, float **probs, char **names, image **alphabet, int classes);
+void ws_send_detections(image im, int num, box *boxes, float thresh, float **probs, char **names, image **alphabet, int classes);
 
 #endif
