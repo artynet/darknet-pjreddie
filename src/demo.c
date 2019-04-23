@@ -7,10 +7,11 @@
 #include "box.h"
 #include "image.h"
 #include "demo.h"
-#include "communication.h"
 #include <sys/time.h>
 
 #define DEMO 1
+
+int showWindow;
 
 #ifdef OPENCV
 

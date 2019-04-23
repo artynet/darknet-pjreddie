@@ -1,5 +1,13 @@
-#include "communication.h"
 #include <json.h>
+#include "lo/lo.h"
+#include <wsclient/wsclient.h>
+#include <stdio.h>
+#include "image.h"
+
+lo_address osc_address;
+wsclient* ws_client;
+char* comm_protocol;
+char* coordFormat;
 
 int onclose(wsclient *c) {
     fprintf(stderr, "ws onclose called: %d\n", c->sockfd);
